@@ -1,0 +1,43 @@
+version: '3'
+
+volumes:
+    vendor:
+    var:
+
+services:
+    mysql:
+        image: mysql:5.7
+        ports:
+            - "3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: prestashop
+        restart: always
+
+    apache:
+        container_name: prestashop-git
+        image: prestashop/prestashop-git:7
+        depends_on:
+            - "mysql"
+        environment:
+            PS_INSTALL_AUTO: 1
+            PS_ERASE_DB: 1
+            PS_DEV_MODE: 0
+            PS_HOST_MODE: 1
+            DB_PASSWD: password
+            DB_NAME: prestashop
+            DB_SERVER: mysql
+            DB_PREFIX: ps_
+            ADMIN_MAIL: demo@prestashop.com
+            ADMIN_PASSWD: prestashop_demo
+            PS_DOMAIN: localhost
+            PS_FOLDER_INSTALL: install-dev
+            PS_FOLDER_ADMIN: admin-dev
+            PS_HANDLE_DYNAMIC_DOMAIN: 1
+        ports:
+            - "80:80"
+        restart: always
+        volumes:
+            - /project:/var/www/html/
+            - /project/vendor:/var/www/html/vendor
+            - /project/var:/var/www/html/var

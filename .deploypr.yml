@@ -1,0 +1,11 @@
+---
+deploy_on:
+  - comment
+build:
+  commands:
+    - make
+  image: "testrigor/base-build:prestashop"
+compose: docker-compose-ci.yml
+setup:
+  - "make reset"
+postfix: ""
